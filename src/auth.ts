@@ -5,9 +5,14 @@ import {
 } from "$env/static/private";
 import { SvelteKitAuth } from "@auth/sveltekit";
 import GitHub from "@auth/sveltekit/providers/github";
+import { RemultAdapter } from "./RemultAdapter";
+// import { _api } from "./routes/api/[...remult]/+server";
+
+import type { Handle } from "@sveltejs/kit";
 
 export const { handle, signIn, signOut } = SvelteKitAuth(async (event) => {
-  const authOptions = {
+  return {
+    adapter: RemultAdapter(),
     providers: [
       GitHub({
         clientId: AUTH_GITHUB_ID,
@@ -17,5 +22,4 @@ export const { handle, signIn, signOut } = SvelteKitAuth(async (event) => {
     secret: AUTH_SECRET,
     trustHost: true,
   };
-  return authOptions;
 });

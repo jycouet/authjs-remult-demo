@@ -1,6 +1,10 @@
-<script>
+<script lang="ts">
   import { SignIn, SignOut } from "@auth/sveltekit/components";
   import { page } from "$app/stores";
+  import { remult } from "remult";
+  import type { LayoutData } from "./$types";
+  export let data: LayoutData;
+  $: remult.user = data.user;
 </script>
 
 <h1>SvelteKit Auth Example</h1>
@@ -27,3 +31,5 @@
     </SignIn>
   {/if}
 </div>
+
+{remult.user?.name}
