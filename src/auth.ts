@@ -3,18 +3,42 @@ import {
   AUTH_GITHUB_SECRET,
   AUTH_SECRET,
 } from "$env/static/private";
-import { SvelteKitAuth } from "@auth/sveltekit";
+import {
+  SvelteKitAuth,
+  type DefaultSession,
+  type SvelteKitAuthConfig,
+} from "@auth/sveltekit";
 import GitHub from "@auth/sveltekit/providers/github";
 import { RemultAdapter } from "./RemultAdapter";
 // import { _api } from "./routes/api/[...remult]/+server";
 
 import type { Handle } from "@sveltejs/kit";
-import type { Session, User } from "./entities";
-import type { UserInfo } from "remult";
+import { Session, User } from "./entities";
+import { Entity, Fields, type UserInfo } from "remult";
 
-const { adapter } = RemultAdapter();
+// @Entity("users", {
+//   dbName: "MyName",
+//   saving(entity, event) {
+//     // console.log("ddfdfd" + remult.user?.id)
+//   },
+// })
+// export class AppUser extends User {
+//   @Fields.boolean()
+//   isDisable = true;
 
-export const options = {
+//   @Fields.string({
+//     dbName: "toto",
+//   })
+//   declare name?: string | null | undefined;
+// }
+
+const { adapter } = RemultAdapter({
+  customEntities: {
+    // User: AppUser,
+  },
+});
+
+export const options: SvelteKitAuthConfig = {
   adapter,
   providers: [
     GitHub({
@@ -23,7 +47,12 @@ export const options = {
     }),
   ],
   callbacks: {
-    session({ session, user }: { session: Session; user: User }) {
+    // signIn(params) {
+    //   params.
+    // },
+    async session({ session, user }) {
+      console.log(`session, user`, session, user);
+
       const userFrontEnd: UserInfo = {
         id: user.id,
         name: user.name ?? undefined,
@@ -31,6 +60,7 @@ export const options = {
         image: user.image,
       };
       return {
+        // ...session,
         expires: session.expires,
         user: userFrontEnd,
       };
@@ -39,6 +69,6 @@ export const options = {
   secret: AUTH_SECRET,
   trustHost: true,
 };
-export const { handle, signIn, signOut } = SvelteKitAuth(async (event) => {
+export const { handle, signIn, signOut } = SvelteKitAuth(async () => {
   return options;
 });

@@ -6,7 +6,9 @@ import {
 } from "@auth/core/adapters";
 import { Entity, Fields, Relations, Validators } from "remult";
 
-@Entity("users", {})
+@Entity("users", {
+  // allowApiRead: false
+})
 export class User implements AdapterUser {
   @Fields.string()
   id!: string;

@@ -10,7 +10,11 @@ declare global {
   }
 }
 
-export {};
+declare module "@auth/sveltekit" {
+  interface Session {
+    user: UserInfo & DefaultSession["user"];
+  }
+}
 
 declare module "remult" {
   export interface UserInfo {
