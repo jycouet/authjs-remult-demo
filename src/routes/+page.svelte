@@ -10,13 +10,14 @@
 <h1>SvelteKit Auth Example</h1>
 <div>
   {#if $page.data.session}
-    {#if $page.data.session.user?.image}
+    {#if $page.data.session.user.image}
       <img
-        src={$page.data.session.user.image}
+        src={$page.data.session?.user.image}
         class="avatar"
         alt="User Avatar"
       />
     {/if}
+    <br />
     <span class="signedInText">
       <small>Signed in as</small><br />
       <strong>{$page.data.session.user?.name ?? "User"}</strong>
@@ -32,4 +33,18 @@
   {/if}
 </div>
 
-{remult.user?.name}
+<h3>session</h3>
+<pre>{JSON.stringify($page.data.session, null, 2)}</pre>
+
+<h3>remult.user</h3>
+<pre>{JSON.stringify(remult.user, null, 2)}</pre>
+
+<style>
+
+  .avatar {
+    width: 100px;
+    border-radius: 50%;
+    border: black solid 3px;
+    margin-right: 1rem;
+  }
+</style>
